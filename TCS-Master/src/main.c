@@ -49,8 +49,10 @@ void ADC_init(void){
     
     DDRA   = (0 << PA0) | (0 << PA1) | (0 << PA2) | (0 << PA3) | (0 << PA4) | (0 << PA5) | (0 << PA6) | (0 << PA7);
 
+    ADMUX = ( 0 << MUX4) | (0 << MUX3) | (1 << MUX2) | (1 << MUX1) | (1 << MUX0);
+
     /* Define Vref Mode -> use AVcc */	        
-	ADMUX   = (0 << REFS1) | (1 << REFS0);
+	ADMUX   |= (0 << REFS1) | (1 << REFS0);
 
 
     /* 
