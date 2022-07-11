@@ -26,6 +26,9 @@ void LCD_init(){
 
 void SPI_init(){
 
+    DDRB = (1<<DDB7) | (0<<DDB6) | (1<<DDB5) | (1<<DDB4) | (1<<DDB3);
+    PORTB = (1<<PORTB4);
+
     /*
         SPI Type: Master
         SPI Clock Rate: 8MHz / 128 = 62.5 kHz
@@ -35,7 +38,6 @@ void SPI_init(){
     */
     SPCR = (0<<SPIE) | (1<<SPE) | (0<<DORD) | (1<<MSTR) | (0<<CPOL) | (0<<CPHA) | (1<<SPR1) | (1<<SPR0);
     SPSR = (0<<SPI2X);
-
 }
 
 void AC_init(){
@@ -78,16 +80,16 @@ int ADC_Operation(void){
 }
 
 
-void print_result_TempA_BigThan_TempB(){
+int print_result_TempA_BigThan_TempB(){
 
     unsigned char TempMSG[10]="Temp-A is ";
     char sensor[10];
     float constant = 0.4888;
-	float temp;
+	float tmp;
 
     // Convert Voltage to Number -> LM35 DataSheet
-    temp = (ADC_Operation() * constant);
-    itoa((int)temp,sensor,10);
+    tmp = (ADC_Operation() * constant);
+    itoa((int)tmp,sensor,10);
 
 
     /* Print Temperature on LCD */
@@ -102,6 +104,9 @@ void print_result_TempA_BigThan_TempB(){
 
     /* clear screen */
     LCD_cmd(0x01);
+
+
+    return tmp;
 }
 
 void print_result_TempA_lessThan_TempB(){
@@ -143,12 +148,10 @@ int main(void) {
         if(( (ACSR >> ACO) & 1) == 1){
 
 
-            print_result_TempA_BigThan_TempB();
+            int TempA = print_result_TempA_BigThan_TempB();
 
-
-            /* PB2 = AIN0 = TEMP-Value-A */
-
-            // SPDR = sensor;
+            PORTB &= ~(1<<PORTB4);
+            SPDR = TempA;
 
         }
         else {
