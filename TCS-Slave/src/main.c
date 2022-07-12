@@ -25,13 +25,16 @@ void LED_OFF(){
     PORTC = (0 << PC0);
 }
 
-void Cooler_Activate(){
+void Cooler_Activate(int temperature){
+
+    double dutyCycle = 255 / 2;
     /* FAST PWM */
     DDRB  |= ( 1 << PORTB3 );
     TCCR0 |= ( 1 << WGM01 ) | ( 1 << WGM00 );
     TCCR0 |= ( 1 << COM01 );
     TCCR0 |= ( 1 << CS01 );
-    OCR0 = 100;
+    OCR0 = (int)(dutyCycle) + (int)(((temperature - 25)/5) * 0.1 * 255);
+
 }
 
 void Cooler_DeActivate(){
@@ -75,7 +78,7 @@ int main(void) {
         else if ( (temp <= 55) && (temp >= 25) ){
             Heater_DeActivate();
             LED_OFF();
-            Cooler_Activate();
+            Cooler_Activate(temp);
         }
         else if (temp < 20) {
             Cooler_DeActivate();
