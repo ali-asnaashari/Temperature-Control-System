@@ -80,6 +80,11 @@ int main(void) {
             LED_OFF();
             Cooler_Activate(temp);
         }
+        else if( (temp >=20) && (temp < 25)){
+             Cooler_DeActivate();
+             LED_OFF();
+             Heater_DeActivate();
+        }
         else if (temp < 20) {
             Cooler_DeActivate();
             LED_OFF();
