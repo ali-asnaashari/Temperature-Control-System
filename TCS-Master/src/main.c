@@ -36,6 +36,18 @@ void SPI_init(){
         SPI Clock Polarity: Low
         SPI Data Order: MSB First
     */
+
+
+    /*
+      SPIE -> SPI Interrupt Enable
+      SPE  -> SPI Enable
+      DORD -> Data Order
+      MSTR -> Master/Slave Select
+      CPOL -> Clock Polarity
+      CPHA -> Clock Phase
+      SPR0 -> SPI Clock Rate Select
+    */
+
     SPCR = (0<<SPIE) | (1<<SPE) | (0<<DORD) | (1<<MSTR) | (0<<CPOL) | (0<<CPHA) | (1<<SPR1) | (1<<SPR0);
     SPSR = (0<<SPI2X);
 }
@@ -62,7 +74,8 @@ void ADC_init(void){
        ADEN: 1 -> Analog To Digital Enable
        Prescaler: 128
     */	     
-    ADCSRA  = (1<<ADEN) | (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);  
+    ADCSRA  = (1<<ADEN) | (1 << ADATE) | (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);  
+    SFIOR  = (0<<ADTS2) | (0 << ADTS1) | (0 << ADTS0);  
 }
 
 int ADC_Operation(void){
